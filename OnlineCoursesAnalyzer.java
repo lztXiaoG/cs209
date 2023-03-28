@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- *
- * This is just a demo for you, please run it on JDK17 (some statements may be not allowed in lower version).
+ * This is just a demo for you, please run it on JDK17 (some statements may be not allowed in l
+ * ower version).
  * This is just a demo, and you can extend and implement functions
  * based on this demo, or implement it in a different way.
  */
@@ -46,17 +46,18 @@ public class OnlineCoursesAnalyzer {
 
     //1
     public Map<String, Integer> getPtcpCountByInst() {
-        Stream<Course>courseStream=courses.stream();
-        Map<String,Integer>a=courseStream.collect(Collectors.groupingBy(Course::getInstitution,Collectors.summingInt(Course::getParticipants)));
+        Stream<Course> courseStream = courses.stream();
+        Map<String,Integer> a = courseStream.collect(Collectors.groupingBy(Course::getInstitution,
+                Collectors.summingInt(Course::getParticipants)));
 
         return a;
     }
 
     //2
     public Map<String, Integer> getPtcpCountByInstAndSubject() {
-        Stream<Course>courseStream=courses.stream();
-        Map<String, Integer>a=courseStream.collect(Collectors.groupingBy(Course::q2,Collectors.summingInt(Course::getParticipants)));
-        Map<String, Integer>b=new LinkedHashMap<>();
+        Stream<Course> courseStream = courses.stream();
+        Map<String, Integer> a = courseStream.collect(Collectors.groupingBy(Course::q2 , Collectors.summingInt(Course::getParticipants)));
+        Map<String, Integer> b = new LinkedHashMap<>();
         a.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).forEachOrdered(x -> b.put(x.getKey(), x.getValue()));
         return b;
     }
@@ -64,49 +65,52 @@ public class OnlineCoursesAnalyzer {
 
     //3
     public Map<String, List<List<String>>> getCourseListOfInstructor() {
-        Stream<Course>courseStream=courses.stream();
-//        List<Course> a= courseStream.filter(course -> course.getInstructors().split(",").length == 1).toList();
-        Map<String,List<String>> a= courseStream.filter(course -> course.getInstructors().split(",").length == 1).sorted(Comparator.comparing(Course::getTitle)).collect(Collectors.groupingBy(Course::getInstructors,Collectors.mapping(Course::getTitle,Collectors.toList())));
-//        Map<String, List<List<String>>>c= a.forEach((key,value)->b.merge(key,value,(v1,v2)->{v1,v2}));
-        Map<String, List<List<String>>>c=new HashMap<>();
-        Iterator<Map.Entry<String,List<String>>> iterator=a.entrySet().iterator();
+        Stream<Course> courseStream = courses.stream();
+//        List<Course> a= courseStream.filter(course -> course.getInstructors().split(",").length == 1)
+//        .toList();
+        Map<String,List<String>> a = courseStream.filter(course -> course.getInstructors().
+                split(",").length == 1).sorted(Comparator.comparing(Course::getTitle)).collect(Collectors.groupingBy(Course::getInstructors,Collectors.mapping(Course::getTitle,Collectors.toList())));
+//        Map<String, List<List<String>>>c= a.forEach((key,value)->b.merge(key,value
+//        ,(v1,v2)->{v1,v2}));
+        Map<String, List<List<String>>> c = new HashMap<>();
+        Iterator<Map.Entry<String,List<String>>> iterator = a.entrySet().iterator();
         while(iterator.hasNext()){
-            Map.Entry<String,List<String>> entry=iterator.next();
-            List<List<String>> d=new ArrayList<>();
-            List<String> e=new ArrayList<>();
+            Map.Entry<String,List<String>> entry = iterator.next();
+            List<List<String>> d = new ArrayList<>();
+            List<String> e = new ArrayList<>();
             d.add(entry.getValue().stream().distinct().toList());
             d.add(e);
             c.put(entry.getKey(),d);
         }
-        courses.stream().forEach(x->{
-            String[] f=x.getInstructors().split(", ");
-            if (f.length != 1){
+        courses.stream().forEach(x -> {
+            String[] f = x.getInstructors().split(", ");
+            if (f.length != 1) {
                 for (int i = 0; i < f.length; i++) {
                     if (c.containsKey(f[i])){
-                        boolean bb=false;
+                        boolean bb = false;
                         for (int i1 = 0; i1 < c.get(f[i]).get(1).size(); i1++) {
-                            if(c.get(f[i]).get(1).get(i1).equals(x.getTitle())){
-                                bb=true;
+                            if (c.get(f[i]).get(1).get(i1).equals(x.getTitle())) {
+                                bb = true;
                                 break;
                             }
                         }
-                        if(bb){
+                        if (bb) {
                             continue;
                         }
                         c.get(f[i]).get(1).add(x.getTitle());
-                    }else {
-                        List<List<String>> g=new ArrayList<>();
-                        List<String> h=new ArrayList<>();
-                        List<String> j=new ArrayList<>();
+                    } else {
+                        List<List<String>> g = new ArrayList<>();
+                        List<String> h = new ArrayList<>();
+                        List<String> j = new ArrayList<>();
                         g.add(h);
                         j.add(x.getTitle());
                         g.add(j);
-                        c.put(f[i],g);
+                        c.put(f[i], g);
                     }
                 }
             }
         });
-        c.forEach((key,value)->{
+        c.forEach((key, value) -> {
             Collections.sort(value.get(1));
         });
 //        StringBuilder sb=new StringBuilder();
@@ -123,21 +127,22 @@ public class OnlineCoursesAnalyzer {
 
     //4
     public List<String> getCourses(int topK, String by) {
-        Stream<Course>courseStream=courses.stream();
-        List<String>a = null;
-        if(by.equals("hours")){
-            a= courseStream.sorted(Comparator.comparing(Course::getTotalHours).reversed()).distinct().limit(topK).map(Course::getTitle).toList();
-        }else if(by.equals("participants")){
-            a= courseStream.sorted(Comparator.comparing(Course::getParticipants).reversed()).distinct().limit(topK).map(Course::getTitle).toList();
+        Stream<Course> courseStream = courses.stream();
+        List<String> a = null;
+        if (by.equals("hours")) {
+            a = courseStream.sorted(Comparator.comparing(Course::getTotalHours).reversed()).
+                    distinct().limit(topK).map(Course::getTitle).toList();
+        } else if (by.equals("participants")){
+            a = courseStream.sorted(Comparator.comparing(Course::getParticipants).reversed()).distinct().limit(topK).map(Course::getTitle).toList();
         }
         return a;
     }
 
     //5
     public List<String> searchCourses(String courseSubject, double percentAudited, double totalCourseHours) {
-        Stream<Course>courseStream=courses.stream();
-        List<String> a=courseStream.filter(x->x.getSubject().toLowerCase(Locale.ROOT).contains(courseSubject.toLowerCase(Locale.ROOT))
-        &&(x.getPercentAudited()>=percentAudited)&&(x.getTotalHours()<=totalCourseHours)).map(Course::getTitle).distinct().sorted().collect(Collectors.toList());
+        Stream<Course> courseStream = courses.stream();
+        List<String> a = courseStream.filter(x -> x.getSubject().toLowerCase(Locale.ROOT).contains(courseSubject.toLowerCase(Locale.ROOT))
+         && (x.getPercentAudited() >= percentAudited) && (x.getTotalHours() <= totalCourseHours)).map(Course::getTitle).distinct().sorted().collect(Collectors.toList());
         int b=0;
         return a;
     }
@@ -186,31 +191,31 @@ public class OnlineCoursesAnalyzer {
 //    }
 
     public List<String> recommendCourses(int age, int gender, int isBachelorOrHigher){
-        Stream<Course>courseStream=courses.stream();
-        Map<String,List<Course>>a=courseStream.sorted(Comparator.comparing(x -> x.launchDate)).collect(Collectors.groupingBy(Course::getNumber,Collectors.toList()));
-        Map<String,Double>b=new HashMap<>();
-        a.entrySet().stream().forEach(x->{
-            double x_median_age=0;
-            double x_male=0;
-            double x_bdh=0;
-            List<Course> c=x.getValue();
+        Stream<Course> courseStream = courses.stream();
+        Map<String,List<Course>> a = courseStream.sorted(Comparator.comparing(x -> x.launchDate)).collect(Collectors.groupingBy(Course::getNumber,Collectors.toList()));
+        Map<String,Double> b = new HashMap<>();
+        a.entrySet().stream().forEach(x -> {
+            double x_median_age = 0;
+            double x_male = 0;
+            double x_bdh = 0;
+            List<Course> c = x.getValue();
             for (int i = 0; i < c.size(); i++) {
-                Course d=c.get(i);
-                x_median_age+=d.medianAge;
-                x_male+=d.percentMale;
-                x_bdh+=d.percentDegree;
+                Course d = c.get(i);
+                x_median_age += d.medianAge;
+                x_male += d.percentMale;
+                x_bdh += d.percentDegree;
             }
-            x_median_age/=c.size();
-            x_male/=c.size();
-            x_bdh/=c.size();
-            double sim=Math.pow(age-x_median_age,2)+Math.pow(gender*100-x_male,2)+Math.pow(isBachelorOrHigher*100-x_bdh,2);
+            x_median_age /= c.size();
+            x_male /= c.size();
+            x_bdh /= c.size();
+            double sim = Math.pow(age-x_median_age,2) + Math.pow(gender * 100 - x_male, 2) + Math.pow(isBachelorOrHigher * 100-x_bdh, 2);
             b.put(x.getValue().get(x.getValue().size()-1).getTitle(),sim);
         });
-        List c=b.entrySet().stream().sorted((x,y)-> (int) (x.getValue()-y.getValue())).map(x->x.getKey()).collect(Collectors.toList());
-        c=c.stream().limit(10).toList();
+        List c = b.entrySet().stream().sorted((x,y) -> (int) (x.getValue() - y.getValue())).map(x -> x.getKey()).collect(Collectors.toList());
+        c = c.stream().limit(10).toList();
 
-        StringBuilder sb=new StringBuilder();
-        c.stream().forEach(x->{
+        StringBuilder sb = new StringBuilder();
+        c.stream().forEach(x -> {
                 sb.append(x);
                 sb.append("\n");
         });
